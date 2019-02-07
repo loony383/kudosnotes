@@ -1,7 +1,7 @@
 import React from 'react'
 import { Button, Form, Grid, Header, Image, Message, Segment } from 'semantic-ui-react'
 
-import styles from '../css/LoginForm.module.css'
+import styles from '../css/LoginForm.module.scss'
 
 console.log(styles);
 
