@@ -20,15 +20,20 @@ let remoteDB;
 class LoginForm extends React.Component {
   constructor(props) {
     super(props);
-    try {
-      this.doLogin();
-    } catch {
-      this.setSync(false);
+    if (remoteDB instanceof PouchDB) {
+      remoteDB.close();
     }
-    remoteDB = false;
+    if (!this.props.isAuthed) {
+      try {
+        this.doLogin();
+      } catch {
+        this.setSync(false);
+      }
+    }
   }
 
   doLogin() {
+    console.log(this.props);
     remoteDB = new PouchDB("http://dnd.zeak.co:5984/dnd", {
       fetch(url, opts) {
         opts.credentials = "include";
@@ -76,7 +81,7 @@ class LoginForm extends React.Component {
       })
       .then(responseAsJson => {
         this.doLogin();
-      })
+      });
   }
 
   handleInputChange(event) {
@@ -95,8 +100,10 @@ class LoginForm extends React.Component {
   }
 
   render() {
-    console.log(this.props);
-    if (!this.props.shouldSync || (this.props.shouldSync && this.props.isAuthed)) {
+    if (
+      !this.props.shouldSync ||
+      (this.props.shouldSync && this.props.isAuthed)
+    ) {
       return this.props.children;
     }
 
@@ -108,35 +115,41 @@ class LoginForm extends React.Component {
           verticalAlign="middle"
         >
           <Grid.Column style={{ maxWidth: 450 }}>
-            <Form size="large">
-              <Segment stacked>
-                <Form.Input
-                  fluid
-                  icon="user"
-                  iconPosition="left"
-                  placeholder="Username"
-                  name="username"
-                  onChange={e => this.handleInputChange(e)}
-                />
-                <Form.Input
-                  fluid
-                  icon="lock"
-                  iconPosition="left"
-                  placeholder="Password"
-                  name="password"
-                  type="password"
-                  onChange={e => this.handleInputChange(e)}
-                />
-
+            <Form>
+              <Header>Login</Header>
+              <Form.Input
+                fluid
+                icon="user"
+                iconPosition="left"
+                placeholder="Username"
+                name="username"
+                onChange={e => this.handleInputChange(e)}
+              />
+              <Form.Input
+                fluid
+                icon="lock"
+                iconPosition="left"
+                placeholder="Password"
+                name="password"
+                type="password"
+                onChange={e => this.handleInputChange(e)}
+              />
+              <Button.Group fluid widths="2">
                 <Button
-                  color="teal"
-                  fluid
+                  content="Continue offline"
                   size="large"
+                  icon="power off"
+                  onClick={() => this.props.setSync(false)}
+                />
+                <Button
+                  primary
+                  icon="sync"
+                  size="large"
+                  icon="sync"
+                  content="Login"
                   onClick={() => this.doSubmit()}
-                >
-                  Login
-                </Button>
-              </Segment>
+                />
+              </Button.Group>
             </Form>
           </Grid.Column>
         </Grid>

@@ -10,7 +10,9 @@ import {
   Header,
   Image,
   Message,
-  Segment
+  Segment,
+  Menu,
+  Container
 } from "semantic-ui-react";
 
 class App extends Component {
@@ -24,26 +26,49 @@ class App extends Component {
   setSync = shouldSync => {
     this.setState({ shouldSync: shouldSync });
   };
+  getLoginLogout() {
+    if (this.state.isAuthed) {
+      return (
+        <Button
+          onClick={() => {
+            this.setAuth(false);
+          }}
+        >
+          Logout
+        </Button>
+      );
+    } else {
+      return (
+        <Button
+          primary
+          onClick={() => {
+            this.setSync(true);
+          }}
+        >
+          Login
+        </Button>
+      );
+    }
+  }
   render() {
     return (
       <React.Fragment>
-        <header>
-          <p />
-        </header>
         <LoginForm
           setAuth={this.setAuth}
           setSync={this.setSync}
           shouldSync={this.state.shouldSync}
           isAuthed={this.state.isAuthed}
         >
-          <Button
-            onClick={() => {
-              this.setSync(true);
-              this.setAuth(false);
-            }}
-          >
-            Clear should auth
-          </Button>
+          <Menu borderless>
+            <Container>
+              <Menu.Item as="a" header fitted="vertically">
+                <Image
+                  src="https://placehold.it/150x35"
+                />
+              </Menu.Item>
+              <Menu.Item position="right">{this.getLoginLogout()}</Menu.Item>
+            </Container>
+          </Menu>
         </LoginForm>
       </React.Fragment>
     );
