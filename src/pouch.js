@@ -1,9 +1,6 @@
 import store from "./store.js";
-import PouchAuth from "pouchdb-authentication";
 
 import PouchDB from "pouchdb";
-
-PouchDB.plugin(PouchAuth);
 
 const db = new PouchDB("dnd");
 
