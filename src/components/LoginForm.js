@@ -9,13 +9,70 @@ import {
   Segment
 } from "semantic-ui-react";
 
+import PouchDB from "pouchdb";
+
 import styles from "../css/LoginForm.module.scss";
 
-import db, { startSync } from "../pouch.js";
+import db from "../pouch.js";
 
 class LoginForm extends React.Component {
   constructor(props) {
     super(props);
+    this.state = { authed: false };
+    this.doLogin();
+  }
+
+  doLogin() {
+    const remoteDB = new PouchDB("http://dnd.zeak.co:5984/dnd", {
+      fetch(url, opts) {
+        opts.credentials = "include";
+        return PouchDB.fetch(url, opts);
+      }
+    });
+
+    db.sync(remoteDB, {
+      live: true,
+      retry: true
+    })
+      .on("change", message => {
+        this.setState({ authed: true });
+      })
+      .on("paused", message => {
+        this.setState({ authed: true });
+      })
+      .on("active", message => {
+        this.setState({ authed: true });
+      })
+      .on("error", err => {
+        this.setState({ authed: true });
+      });
+  }
+
+  // Attempt a login in case there is a existing login cookie
+
+  startSync(username, password) {
+    fetch("http://dnd.zeak.co:5984/_session", {
+      method: "post",
+      headers: {
+        Accept: "application/json",
+        Host: "localhost:5984",
+        "Content-Type": "application/x-www-form-urlencoded"
+      },
+      credentials: "include",
+      body: "name=" + username + "&password=" + password
+    })
+      .then(response => {
+        if (!response.ok) {
+          throw Error(response.statusText);
+        }
+        return response.json();
+      })
+      .then(responseAsJson => {
+        this.doLogin();
+      })
+      .catch(function(error) {
+        console.log("Looks like there was a problem: \n", error);
+      });
   }
 
   handleInputChange(event) {
@@ -28,11 +85,15 @@ class LoginForm extends React.Component {
     });
   }
 
-  doSubmit = () => {
-    startSync(this.state.username, this.state.password);
-  };
+  doSubmit() {
+    this.startSync(this.state.username, this.state.password);
+  }
 
   render() {
+    if (this.state.authed) {
+      return this.props.children;
+    }
+
     return (
       <div className={styles.LoginForm}>
         <Grid
