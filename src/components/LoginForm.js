@@ -15,15 +15,21 @@ import styles from "../css/LoginForm.module.scss";
 
 import db from "../pouch.js";
 
+let remoteDB;
+
 class LoginForm extends React.Component {
   constructor(props) {
     super(props);
-    this.state = { authed: false };
-    this.doLogin();
+    try {
+      this.doLogin();
+    } catch {
+      this.setSync(false);
+    }
+    remoteDB = false;
   }
 
   doLogin() {
-    const remoteDB = new PouchDB("http://dnd.zeak.co:5984/dnd", {
+    remoteDB = new PouchDB("http://dnd.zeak.co:5984/dnd", {
       fetch(url, opts) {
         opts.credentials = "include";
         return PouchDB.fetch(url, opts);
@@ -35,16 +41,16 @@ class LoginForm extends React.Component {
       retry: true
     })
       .on("change", message => {
-        this.setState({ authed: true });
+        this.props.setAuth(true);
       })
       .on("paused", message => {
-        this.setState({ authed: true });
+        this.props.setAuth(true);
       })
       .on("active", message => {
-        this.setState({ authed: true });
+        this.props.setAuth(true);
       })
       .on("error", err => {
-        this.setState({ authed: true });
+        this.props.setAuth(false);
       });
   }
 
@@ -63,6 +69,7 @@ class LoginForm extends React.Component {
     })
       .then(response => {
         if (!response.ok) {
+          this.props.setAuth({ isAuthed: false, shouldSync: true });
           throw Error(response.statusText);
         }
         return response.json();
@@ -70,9 +77,6 @@ class LoginForm extends React.Component {
       .then(responseAsJson => {
         this.doLogin();
       })
-      .catch(function(error) {
-        console.log("Looks like there was a problem: \n", error);
-      });
   }
 
   handleInputChange(event) {
@@ -86,11 +90,13 @@ class LoginForm extends React.Component {
   }
 
   doSubmit() {
+    this.props.setSync(true);
     this.startSync(this.state.username, this.state.password);
   }
 
   render() {
-    if (this.state.authed) {
+    console.log(this.props);
+    if (!this.props.shouldSync || (this.props.shouldSync && this.props.isAuthed)) {
       return this.props.children;
     }
 
@@ -129,17 +135,6 @@ class LoginForm extends React.Component {
                   onClick={() => this.doSubmit()}
                 >
                   Login
-                </Button>
-
-                <Button
-                  color="teal"
-                  fluid
-                  size="large"
-                  onClick={() => {
-                    db.post({ ts: Math.random() });
-                  }}
-                >
-                  Add stuffs
                 </Button>
               </Segment>
             </Form>
