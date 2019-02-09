@@ -5,12 +5,7 @@ import "./App.css";
 
 import {
   Button,
-  Form,
-  Grid,
-  Header,
   Image,
-  Message,
-  Segment,
   Menu,
   Container
 } from "semantic-ui-react";

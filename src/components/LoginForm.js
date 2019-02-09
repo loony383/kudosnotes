@@ -4,9 +4,6 @@ import {
   Form,
   Grid,
   Header,
-  Image,
-  Message,
-  Segment
 } from "semantic-ui-react";
 
 import PouchDB from "pouchdb";
@@ -145,7 +142,6 @@ class LoginForm extends React.Component {
                   primary
                   icon="sync"
                   size="large"
-                  icon="sync"
                   content="Login"
                   onClick={() => this.doSubmit()}
                 />
