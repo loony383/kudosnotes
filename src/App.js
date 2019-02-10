@@ -1,6 +1,7 @@
 import React from "react";
 import LoginForm from "./components/LoginForm.js";
 import DocumentTree from "./components/DocumentTree.js";
+import DocumentPane from "./components/DocumentPane.js";
 import "semantic-ui-css/semantic.min.css";
 import "./App.css";
 
@@ -9,7 +10,14 @@ import { Button, Image, Menu, Container, Grid } from "semantic-ui-react";
 class App extends React.Component {
   constructor(props) {
     super(props);
-    this.state = {shouldSync: false, isAuthed: false, CurrentDirectory: false, currentDocument: false};
+    let storedCurrentDirectory = localStorage.getItem('currentDirectory');
+    let storedCurrentDocument = localStorage.getItem('currentDocument');
+    this.state = {
+      shouldSync: false,
+      isAuthed: false,
+      currentDirectory: (storedCurrentDirectory ? storedCurrentDirectory : false),
+      currentDocument: (storedCurrentDocument ? storedCurrentDocument : false)
+    };
   }
 
   setAuth = authed => {
@@ -45,11 +53,13 @@ class App extends React.Component {
   }
 
   setCurrentDirectory = (uuid) => {
-    this.setState({CurrentDirectory: uuid});
+    this.setState({currentDirectory: uuid});
+    localStorage.setItem('currentDirectory', uuid);
   }
 
   setCurrentDocument = (uuid) => {
     this.setState({currentDocument: uuid});
+    localStorage.setItem('currentDocument', uuid);
   }
 
   render() {
@@ -73,11 +83,13 @@ class App extends React.Component {
             <Grid>
               <Grid.Row>
                 <Grid.Column width={4}>
-                  <DocumentTree CurrentDirectory={this.state.CurrentDirectory}
+                  <DocumentTree currentDirectory={this.state.currentDirectory}
                                 setCurrentDirectory={this.setCurrentDirectory}/>
                 </Grid.Column>
                 <Grid.Column width={12}>
-                  <p>Edit pane</p>
+                  <DocumentPane currentDocument={this.state.currentDocument}
+                                currentDirectory={this.state.currentDirectory}
+                                setCurrentDocument={this.setCurrentDocument}/>
                 </Grid.Column>
               </Grid.Row>
             </Grid>
