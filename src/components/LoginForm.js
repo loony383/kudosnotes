@@ -120,6 +120,7 @@ class LoginForm extends React.Component {
                 iconPosition="left"
                 placeholder="Username"
                 name="username"
+                value={this.state.username}
                 onChange={e => this.handleInputChange(e)}
               />
               <Form.Input
@@ -129,6 +130,7 @@ class LoginForm extends React.Component {
                 placeholder="Password"
                 name="password"
                 type="password"
+                value={this.state.password}
                 onChange={e => this.handleInputChange(e)}
               />
               <Button.Group fluid widths="2">

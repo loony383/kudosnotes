@@ -2,6 +2,11 @@ import React from "react";
 
 import db from '../pouch.js'
 
+import {
+  Segment,
+} from "semantic-ui-react";
+
+import NewFolder from "./NewFolder";
 import styles from '../css/DocumentPane.module.scss'
 
 class DocumentPane extends React.Component {
@@ -31,8 +36,9 @@ class DocumentPane extends React.Component {
     });
   }
 
-  render() {
+  getCurrentPane() {
     if (this.props.currentDocument === false && this.props.currentDirectory !== false) {
+
       if (this.state.directoryDocuments.length > 0) {
         return (<p>Has docs</p>)
       }
@@ -47,6 +53,15 @@ class DocumentPane extends React.Component {
         <p>got a current doc</p>
       );
     }
+  }
+
+  render() {
+    return (
+      <Segment>
+        <NewFolder currentDirectory={this.props.currentDirectory} />
+        {this.getCurrentPane()}
+      </Segment>
+    )
   }
 }
 
