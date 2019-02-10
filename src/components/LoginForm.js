@@ -71,7 +71,7 @@ class LoginForm extends React.Component {
     })
       .then(response => {
         if (!response.ok) {
-          this.props.setAuth({ isAuthed: false, shouldSync: true });
+          this.props.setAuth({isAuthed: false, shouldSync: true});
           throw Error(response.statusText);
         }
         return response.json();
@@ -108,10 +108,10 @@ class LoginForm extends React.Component {
       <div className={styles.LoginForm}>
         <Grid
           textAlign="center"
-          style={{ height: "100%" }}
+          style={{height: "100%"}}
           verticalAlign="middle"
         >
-          <Grid.Column style={{ maxWidth: 450 }}>
+          <Grid.Column style={{maxWidth: 450}}>
             <Form>
               <Header>Login</Header>
               <Form.Input

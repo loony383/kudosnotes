@@ -17,7 +17,7 @@ export default function documentsReducer(state, action) {
         ...state,
         documents: {
           ...state.documents,
-          [uuidv4()]: { title: action.title, content: action.content }
+          [uuidv4()]: {title: action.title, content: action.content}
         }
       };
     case EDIT_DOCUMENT:
@@ -25,7 +25,7 @@ export default function documentsReducer(state, action) {
         ...state,
         documents: {
           ...state.documents,
-          [action.id]: { title: action.title, content: action.content }
+          [action.id]: {title: action.title, content: action.content}
         }
       };
     case DELETE_DOCUMENT:
