@@ -32,7 +32,7 @@ class NewFolder extends React.Component {
       db.post({
         parent: this.props.currentDirectory,
         type: 'dir',
-        name: this.state.new_folder,
+        name: this.state.name,
         uuid: uuidv4()
       });
       this.setState({name: '', error: false});

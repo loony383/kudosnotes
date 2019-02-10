@@ -10,6 +10,12 @@ class DocumentTree extends React.Component {
     super(props);
     this.state = {directories: {}};
     this.setDirectories('')
+    db.changes({
+      since: 'now',
+      live: true
+    }).on('change', (change) => {
+      this.setDirectories('')
+    })
   }
 
   setDirectories(uuid) {
