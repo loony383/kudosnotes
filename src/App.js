@@ -73,10 +73,10 @@ class App extends React.Component {
         >
           <Menu borderless>
             <Container>
-              <Menu.Item as="a" header fitted="vertically">
+              <Menu.Item as="a" header fitted={true} >
                 <Image src="https://placehold.it/150x35"/>
               </Menu.Item>
-              <Menu.Item position="right">{this.getLoginLogout()}</Menu.Item>
+              <Menu.Item fitted="horizontally" position="right">{this.getLoginLogout()}</Menu.Item>
             </Container>
           </Menu>
           <Container>
