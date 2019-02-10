@@ -27,7 +27,6 @@ class DocumentTree extends React.Component {
   }
 
   hasChildren(uuid) {
-    console.log(uuid);
     return this.state.directories.hasOwnProperty(uuid) && this.state.directories[uuid].length > 0;
   }
 
@@ -53,6 +52,7 @@ class DocumentTree extends React.Component {
   }
 
   render() {
+    console.log('render');
     if (Object.keys(this.state.directories).length === 0) {
       return (
         <Loader active/>
@@ -67,9 +67,12 @@ class DocumentTree extends React.Component {
             <List.Icon name='folder'/>
             <List.Content>
               <List.Description>root</List.Description>
+              {this.hasChildren('') ?
+                <List.List selection className={styles.ChildList}>
+                  {this.getListForDir('')}
+                </List.List> : ''}
             </List.Content>
           </List.Item>
-          {this.getListForDir('')}
         </List>
       );
     }
