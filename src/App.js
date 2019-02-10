@@ -1,14 +1,10 @@
 import React, { Component } from "react";
 import LoginForm from "./components/LoginForm.js";
+import DocumentTree from "./components/DocumentTree.js";
 import "semantic-ui-css/semantic.min.css";
 import "./App.css";
 
-import {
-  Button,
-  Image,
-  Menu,
-  Container
-} from "semantic-ui-react";
+import { Button, Image, Menu, Container, Grid } from "semantic-ui-react";
 
 class App extends Component {
   constructor(props) {
@@ -57,13 +53,23 @@ class App extends Component {
           <Menu borderless>
             <Container>
               <Menu.Item as="a" header fitted="vertically">
-                <Image
-                  src="https://placehold.it/150x35"
-                />
+                <Image src="https://placehold.it/150x35" />
               </Menu.Item>
               <Menu.Item position="right">{this.getLoginLogout()}</Menu.Item>
             </Container>
           </Menu>
+          <Container>
+            <Grid>
+              <Grid.Row>
+                <Grid.Column width={4}>
+                  <DocumentTree />
+                </Grid.Column>
+                <Grid.Column width={12}>
+                  <p>Edit pane</p>
+                </Grid.Column>
+              </Grid.Row>
+            </Grid>
+          </Container>
         </LoginForm>
       </React.Fragment>
     );
