@@ -38,12 +38,12 @@ class DocumentTree extends React.Component {
     return (
       this.state.directories[uuid].map((current) => {
         return (
-          <List.Item as='a' onClick={() => this.setDirectory(current.uuid)}>
+          <List.Item key={current.uuid}>
             <List.Icon name='folder'/>
             <List.Content>
-              <List.Description>{current.name}</List.Description>
+              <List.Description as='a' onClick={() => this.setDirectory(current.uuid)}>{current.name}</List.Description>
               {this.hasChildren(current.uuid) ?
-                <List.List selection className={styles.ChildList}>{this.getListForDir(current.uuid)}</List.List> : ''}
+                <List.List className={styles.ChildList}>{this.getListForDir(current.uuid)}</List.List> : ''}
             </List.Content>
           </List.Item>
         )
@@ -52,7 +52,6 @@ class DocumentTree extends React.Component {
   }
 
   render() {
-    console.log('render');
     if (Object.keys(this.state.directories).length === 0) {
       return (
         <Loader active/>
@@ -63,12 +62,12 @@ class DocumentTree extends React.Component {
           <List.Item>
             <List.Header>Folder Tree</List.Header>
           </List.Item>
-          <List.Item as='a' onClick={() => this.setDirectory('')}>
+          <List.Item>
             <List.Icon name='folder'/>
             <List.Content>
-              <List.Description>root</List.Description>
+              <List.Description as='a' onClick={() => this.setDirectory('')}>root</List.Description>
               {this.hasChildren('') ?
-                <List.List selection className={styles.ChildList}>
+                <List.List className={styles.ChildList}>
                   {this.getListForDir('')}
                 </List.List> : ''}
             </List.Content>
