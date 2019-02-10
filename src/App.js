@@ -15,7 +15,7 @@ class App extends React.Component {
     this.state = {
       shouldSync: false,
       isAuthed: false,
-      currentDirectory: (storedCurrentDirectory ? storedCurrentDirectory : false),
+      currentDirectory: (storedCurrentDirectory ? storedCurrentDirectory : ''),
       currentDocument: (storedCurrentDocument ? storedCurrentDocument : false)
     };
   }
