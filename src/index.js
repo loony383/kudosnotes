@@ -20,8 +20,3 @@ ReactDOM.render(<Provider store={store}><App /></Provider>, document.getElementB
 // unregister() to register() below. Note this comes with some pitfalls.
 // Learn more about service workers: http://bit.ly/CRA-PWA
 serviceWorker.unregister();
-
-
-store.dispatch(addDocument('title1', 'content1'))
-store.dispatch(addDocument('title2', 'content2'))
-store.dispatch(addDocument('title3', 'content3'))

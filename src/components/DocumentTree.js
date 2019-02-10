@@ -1,80 +1,71 @@
-import React from 'react'
-import { List } from 'semantic-ui-react'
+import React from "react";
+import { List, Loader } from "semantic-ui-react";
 
-const DocumentTree = () => (
-  <List>
-    <List.Item>
-      <List.Icon name='folder' />
-      <List.Content>
-        <List.Header>src</List.Header>
-        <List.Description>Source files for project</List.Description>
-        <List.List>
-          <List.Item>
-            <List.Icon name='folder' />
-            <List.Content>
-              <List.Header>site</List.Header>
-              <List.Description>Your site's theme</List.Description>
-            </List.Content>
-          </List.Item>
-          <List.Item>
-            <List.Icon name='folder' />
-            <List.Content>
-              <List.Header>themes</List.Header>
-              <List.Description>Packaged theme files</List.Description>
-              <List.List>
-                <List.Item>
-                  <List.Icon name='folder' />
-                  <List.Content>
-                    <List.Header>default</List.Header>
-                    <List.Description>Default packaged theme</List.Description>
-                  </List.Content>
-                </List.Item>
-                <List.Item>
-                  <List.Icon name='folder' />
-                  <List.Content>
-                    <List.Header>my_theme</List.Header>
-                    <List.Description>
-                      Packaged themes are also available in this folder
-                    </List.Description>
-                  </List.Content>
-                </List.Item>
-              </List.List>
-            </List.Content>
-          </List.Item>
-          <List.Item>
-            <List.Icon name='file' />
-            <List.Content>
-              <List.Header>theme.config</List.Header>
-              <List.Description>Config file for setting packaged themes</List.Description>
-            </List.Content>
-          </List.Item>
-        </List.List>
-      </List.Content>
-    </List.Item>
-    <List.Item>
-      <List.Icon name='folder' />
-      <List.Content>
-        <List.Header>dist</List.Header>
-        <List.Description>Compiled CSS and JS files</List.Description>
-        <List.List>
-          <List.Item>
-            <List.Icon name='folder' />
-            <List.Content>
-              <List.Header>components</List.Header>
-              <List.Description>Individual component CSS and JS</List.Description>
-            </List.Content>
-          </List.Item>
-        </List.List>
-      </List.Content>
-    </List.Item>
-    <List.Item>
-      <List.Icon name='file' />
-      <List.Content>
-        <List.Header>semantic.json</List.Header>
-        <List.Description>Contains build settings for gulp</List.Description>
-      </List.Content>
-    </List.Item>
-  </List>
-)
+import db from '../pouch.js'
 
-export default DocumentTree
+class DocumentTree extends React.Component {
+    constructor(props) {
+        super(props);
+        this.state = {directories: {}};
+        this.setDirectories('')
+    }
+
+    setDirectories(uuid) {
+        db.find({selector: {parent: uuid, type: 'dir'}}).then((result) => {
+            let directories = this.state.directories;
+            directories[uuid] = result.docs;
+            this.setState({directories: directories});
+            result.docs.map((current => {
+                this.setDirectories(current.uuid)
+            }))
+
+        }).catch(e => {
+            console.log(e);
+        });
+    }
+
+    setDirectory(event, data) {
+        this.props.setCurrentDirectory(data);
+    }
+
+    hasChildren(uuid) {
+        console.log(uuid);
+        return this.state.directories.hasOwnProperty(uuid) && this.state.directories[uuid].length > 0;
+    }
+
+    getListForDir(uuid) {
+        return (
+            this.state.directories[uuid].map((current) => {
+                return (
+                    <List.Item>
+                        <List.Icon name='folder' />
+                        <List.Content>
+                            <List.Description>{current.name}</List.Description>
+                            {this.hasChildren(current.uuid) ?
+                                <List.List>{this.getListForDir(current.uuid)}</List.List> : ''}
+                        </List.Content>
+                    </List.Item>
+                )
+            })
+        )
+    }
+
+    render() {
+        if (Object.keys(this.state.directories).length == 0) {
+            return (
+                <Loader active />
+            )
+        } else {
+            return (
+                <List>
+                    <List.Item>
+                        <List.Header>Folder Tree</List.Header>
+                    </List.Item>
+                    {this.getListForDir('')}
+                </List>
+            );
+        }
+    }
+}
+
+export default DocumentTree;
