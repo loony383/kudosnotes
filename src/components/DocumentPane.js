@@ -3,19 +3,27 @@ import React from "react";
 import db from '../pouch.js'
 
 import {
-  Segment,
+  Grid,
 } from "semantic-ui-react";
 
 import NewFolder from "./NewFolder";
+import DeleteFolder from "./DeleteFolder";
 import styles from '../css/DocumentPane.module.scss'
 
 class DocumentPane extends React.Component {
   constructor(props) {
     super(props);
-    this.state = {document: {}, directory: {}, directoryDocuments: []};
+    this.state = {document: {}, directory: {}, directoryDocuments: [], currentDirectoryDocument: {}};
     this.getDocument(this.props.currentDocument)
-    this.getDirectory(this.props.currentDirectory);
     if (this.props.currentDirectory) {
+      this.getDirectory(this.props.currentDirectory)
+      this.getDirectoryDocuments(this.props.currentDirectory)
+    }
+  }
+
+  componentDidUpdate(prevProps) {
+    if (this.props.currentDirectory !== prevProps.currentDirectory) {
+      this.getDirectory(this.props.currentDirectory)
       this.getDirectoryDocuments(this.props.currentDirectory)
     }
   }
@@ -25,8 +33,15 @@ class DocumentPane extends React.Component {
   }
 
   getDirectory(uuid) {
-
+    db.find({selector: {uuid: uuid, type: 'dir'}}).then((result) => {
+      if (result.docs.length > 0) {
+        this.setState({currentDirectoryDocument: result.docs[0]});
+      }
+    }).catch(e => {
+      console.log(e);
+    });
   }
+
 
   getDirectoryDocuments(uuid) {
     db.find({selector: {parent: uuid, type: 'doc'}}).then((result) => {
@@ -57,10 +72,22 @@ class DocumentPane extends React.Component {
 
   render() {
     return (
-      <Segment>
-        <NewFolder currentDirectory={this.props.currentDirectory} />
-        {this.getCurrentPane()}
-      </Segment>
+      <Grid>
+        <Grid.Row>
+          <Grid.Column floated='left' width={2}>
+            <DeleteFolder setCurrentDirectory={this.props.setCurrentDirectory}
+                          currentDirectoryDocument={this.state.currentDirectoryDocument}/>
+          </Grid.Column>
+          <Grid.Column floated='right' width={10}>
+            <NewFolder currentDirectory={this.props.currentDirectory}/>
+          </Grid.Column>
+        </Grid.Row>
+        <Grid.Row>
+          <Grid.Column width={12}>
+            {this.getCurrentPane()}
+          </Grid.Column>
+        </Grid.Row>
+      </Grid>
     )
   }
 }

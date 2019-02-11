@@ -31,7 +31,6 @@ class LoginForm extends React.Component {
   }
 
   doLogin() {
-    console.log(this.props);
     remoteDB = new PouchDB("http://dnd.zeak.co:5984/dnd", {
       fetch(url, opts) {
         opts.credentials = "include";

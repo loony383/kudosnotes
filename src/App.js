@@ -89,7 +89,9 @@ class App extends React.Component {
                 <Grid.Column width={12}>
                   <DocumentPane currentDocument={this.state.currentDocument}
                                 currentDirectory={this.state.currentDirectory}
-                                setCurrentDocument={this.setCurrentDocument}/>
+                                setCurrentDocument={this.setCurrentDocument}
+                                setCurrentDirectory={this.setCurrentDirectory}
+                  />
                 </Grid.Column>
               </Grid.Row>
             </Grid>
