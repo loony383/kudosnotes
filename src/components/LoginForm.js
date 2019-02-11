@@ -17,6 +17,7 @@ let remoteDB;
 class LoginForm extends React.Component {
   constructor(props) {
     super(props);
+    this.state = {username: "", password: ""}
     if (remoteDB instanceof PouchDB) {
       remoteDB.close();
     }
