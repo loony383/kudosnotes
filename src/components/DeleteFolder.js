@@ -3,8 +3,6 @@ import {
   Button, Icon, Modal,
 } from "semantic-ui-react";
 
-import uuidv4 from 'uuid/v4'
-
 import db from "../pouch.js";
 
 class NewFolder extends React.Component {

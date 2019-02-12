@@ -2,7 +2,6 @@ import React from "react";
 import {
   Button,
   Form,
-  Header,
 } from "semantic-ui-react";
 
 import uuidv4 from 'uuid/v4'
