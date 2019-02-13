@@ -16,6 +16,9 @@ class Pouch extends React.Component {
     this.state = {
       shouldSync: false,
       isAuthed: false,
+      directoryListener: false,
+      folderListener: false,
+      sync: false
     };
   }
 
@@ -48,6 +51,7 @@ class Pouch extends React.Component {
         isLoggedIn: this.isLoggedIn,
         requiresLogin: this.requiresLogin,
         setSync: this.setSync,
+        doLogout: this.doLogout,
         setAuth: this.setAuth
       }}>
         {this.props.children}
@@ -55,6 +59,17 @@ class Pouch extends React.Component {
     )
   }
 
+  doLogout = () => {
+    localStorage.setItem('autoLogin', false);
+    this.setSync(false)
+    this.setAuth(false)
+    if (this.state.sync !== false) {
+      let oldSync = this.state.sync
+      oldSync.cancel()
+      this.setState({sync: false})
+      remoteDB.close();
+    }
+  }
 
   doLogin = () => {
     remoteDB = new PouchDB("http://dnd.zeak.co:5984/dnd", {
@@ -64,7 +79,7 @@ class Pouch extends React.Component {
       }
     });
 
-    db.sync(remoteDB, {
+    let sync = db.sync(remoteDB, {
       live: true,
       retry: true
     })
@@ -80,9 +95,9 @@ class Pouch extends React.Component {
       .on("error", err => {
         this.setAuth(false);
       });
+    this.setState({sync: sync});
+    localStorage.setItem('autoLogin', true);
   }
-
-  // Attempt a login in case there is a existing login cookie
 
   startSync = (username, password) => {
     fetch("http://dnd.zeak.co:5984/_session", {

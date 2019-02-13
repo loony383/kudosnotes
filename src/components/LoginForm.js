@@ -16,7 +16,7 @@ class LoginForm extends React.Component {
   }
 
   componentDidMount() {
-    if (!this.props.isAuthed) {
+    if (localStorage.getItem('autoLogin') === 'true' && !this.context.isLoggedIn()) {
       try {
         this.context.doLogin();
       } catch {
@@ -46,53 +46,53 @@ class LoginForm extends React.Component {
     }
 
     return (
-        <div className={styles.LoginForm}>
-          <Grid
-            textAlign="center"
-            style={{height: "100%"}}
-            verticalAlign="middle"
-          >
-            <Grid.Column style={{maxWidth: 450}}>
-              <Form>
-                <Header>Login</Header>
-                <Form.Input
-                  fluid
-                  icon="user"
-                  iconPosition="left"
-                  placeholder="Username"
-                  name="username"
-                  value={this.state.username}
-                  onChange={e => this.handleInputChange(e)}
+      <div className={styles.LoginForm}>
+        <Grid
+          textAlign="center"
+          style={{height: "100%"}}
+          verticalAlign="middle"
+        >
+          <Grid.Column style={{maxWidth: 450}}>
+            <Form>
+              <Header>Login</Header>
+              <Form.Input
+                fluid
+                icon="user"
+                iconPosition="left"
+                placeholder="Username"
+                name="username"
+                value={this.state.username}
+                onChange={e => this.handleInputChange(e)}
+              />
+              <Form.Input
+                fluid
+                icon="lock"
+                iconPosition="left"
+                placeholder="Password"
+                name="password"
+                type="password"
+                value={this.state.password}
+                onChange={e => this.handleInputChange(e)}
+              />
+              <Button.Group fluid widths="2">
+                <Button
+                  content="Continue offline"
+                  size="large"
+                  icon="power off"
+                  onClick={() => this.context.setSync(false)}
                 />
-                <Form.Input
-                  fluid
-                  icon="lock"
-                  iconPosition="left"
-                  placeholder="Password"
-                  name="password"
-                  type="password"
-                  value={this.state.password}
-                  onChange={e => this.handleInputChange(e)}
+                <Button
+                  primary
+                  icon="sync"
+                  size="large"
+                  content="Login"
+                  onClick={() => this.doSubmit()}
                 />
-                <Button.Group fluid widths="2">
-                  <Button
-                    content="Continue offline"
-                    size="large"
-                    icon="power off"
-                    onClick={() => this.context.setSync(false)}
-                  />
-                  <Button
-                    primary
-                    icon="sync"
-                    size="large"
-                    content="Login"
-                    onClick={() => this.doSubmit()}
-                  />
-                </Button.Group>
-              </Form>
-            </Grid.Column>
-          </Grid>
-        </div>
+              </Button.Group>
+            </Form>
+          </Grid.Column>
+        </Grid>
+      </div>
     );
   }
 }

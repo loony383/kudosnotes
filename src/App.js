@@ -25,7 +25,7 @@ class App extends React.Component {
       return (
         <Button
           onClick={() => {
-            this.context.setAuth(false);
+            this.context.doLogout();
           }}
         >
           Logout
