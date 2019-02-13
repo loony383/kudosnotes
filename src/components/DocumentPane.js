@@ -38,6 +38,8 @@ class DocumentPane extends React.Component {
     this.context.db.find({selector: {uuid: uuid, type: 'dir'}}).then((result) => {
       if (result.docs.length > 0) {
         this.setState({currentDirectoryDocument: result.docs[0]});
+      } else {
+        this.setState({currentDirectoryDocument: {}});
       }
     }).catch(e => {
       console.log(e);

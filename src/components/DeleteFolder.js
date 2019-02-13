@@ -30,6 +30,9 @@ class DeleteFolder extends React.Component {
   }
 
   render() {
+    if (typeof this.props.currentDirectoryDocument.uuid === 'undefined') {
+      return null;
+    }
     return (
       <Modal open={this.state.open}
              onClose={this.doClose}
