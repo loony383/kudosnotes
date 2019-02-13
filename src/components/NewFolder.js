@@ -9,7 +9,6 @@ import uuidv4 from 'uuid/v4'
 import styles from "../css/NewFolder.module.scss";
 
 import { PouchContext } from "../pouch.js";
-import DocumentTree from "./DocumentTree";
 
 class NewFolder extends React.Component {
   constructor(props) {

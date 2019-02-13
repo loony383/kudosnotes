@@ -4,7 +4,6 @@ import {
 } from "semantic-ui-react";
 
 import { PouchContext } from "../pouch";
-import LoginForm from "./LoginForm";
 
 class DeleteFolder extends React.Component {
   constructor(props) {

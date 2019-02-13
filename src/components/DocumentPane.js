@@ -8,7 +8,6 @@ import {
 import NewFolder from "./NewFolder";
 import DeleteFolder from "./DeleteFolder";
 import styles from '../css/DocumentPane.module.scss'
-import DocumentTree from "./DocumentTree";
 
 class DocumentPane extends React.Component {
   constructor(props) {
