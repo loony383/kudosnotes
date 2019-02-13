@@ -3,9 +3,10 @@ import {
   Button, Icon, Modal,
 } from "semantic-ui-react";
 
-import db from "../pouch.js";
+import { PouchContext } from "../pouch";
+import LoginForm from "./LoginForm";
 
-class NewFolder extends React.Component {
+class DeleteFolder extends React.Component {
   constructor(props) {
     super(props);
     this.state = {open: false}
@@ -26,7 +27,7 @@ class NewFolder extends React.Component {
     this.doClose();
     let documentToDelete = {...this.props.currentDirectoryDocument};
     this.props.setCurrentDirectory(this.props.currentDirectoryDocument.parent);
-    db.remove(documentToDelete)
+    this.context.db.remove(documentToDelete)
   }
 
   render() {
@@ -47,4 +48,6 @@ class NewFolder extends React.Component {
   }
 }
 
-export default NewFolder;
+DeleteFolder.contextType = PouchContext;
+
+export default DeleteFolder;

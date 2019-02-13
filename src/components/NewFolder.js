@@ -8,7 +8,8 @@ import uuidv4 from 'uuid/v4'
 
 import styles from "../css/NewFolder.module.scss";
 
-import db from "../pouch.js";
+import { PouchContext } from "../pouch.js";
+import DocumentTree from "./DocumentTree";
 
 class NewFolder extends React.Component {
   constructor(props) {
@@ -28,7 +29,7 @@ class NewFolder extends React.Component {
 
   doSubmit() {
     if (this.state.name.length > 3) {
-      db.post({
+      this.context.db.post({
         parent: this.props.currentDirectory,
         type: 'dir',
         name: this.state.name,
@@ -63,5 +64,8 @@ class NewFolder extends React.Component {
     );
   }
 }
+
+NewFolder.contextType = PouchContext;
+
 
 export default NewFolder;

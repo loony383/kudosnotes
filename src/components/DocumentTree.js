@@ -1,16 +1,21 @@
 import React from "react";
 import { List, Loader } from "semantic-ui-react";
 
-import db from '../pouch.js'
+import { PouchContext } from '../pouch.js'
 
 import styles from '../css/DocumentTree.module.scss'
 
 class DocumentTree extends React.Component {
+
   constructor(props) {
     super(props);
     this.state = {directories: {}};
+
+  }
+
+  componentDidMount() {
     this.setDirectories('')
-    db.changes({
+    this.context.db.changes({
       since: 'now',
       live: true
     }).on('change', (change) => {
@@ -19,7 +24,7 @@ class DocumentTree extends React.Component {
   }
 
   setDirectories(uuid) {
-    db.find({selector: {parent: uuid, type: 'dir'}}).then((result) => {
+    this.context.db.find({selector: {parent: uuid, type: 'dir'}}).then((result) => {
       let directories = this.state.directories;
       directories[uuid] = result.docs;
       this.setState({directories: directories});
@@ -71,24 +76,26 @@ class DocumentTree extends React.Component {
       )
     } else {
       return (
-        <List selection>
-          <List.Item>
-            <List.Header>Folder Tree</List.Header>
-          </List.Item>
-          <List.Item>
-            <List.Icon name='folder' color={this.isActiveClass('')}/>
-            <List.Content>
-              <List.Description as='a' onClick={() => this.setDirectory('')}>root</List.Description>
-              {this.hasChildren('') ?
-                <List.List className={styles.ChildList}>
-                  {this.getListForDir('')}
-                </List.List> : ''}
-            </List.Content>
-          </List.Item>
-        </List>
+          <List selection>
+            <List.Item>
+              <List.Header>Folder Tree</List.Header>
+            </List.Item>
+            <List.Item>
+              <List.Icon name='folder' color={this.isActiveClass('')}/>
+              <List.Content>
+                <List.Description as='a' onClick={() => this.setDirectory('')}>root</List.Description>
+                {this.hasChildren('') ?
+                  <List.List className={styles.ChildList}>
+                    {this.getListForDir('')}
+                  </List.List> : ''}
+              </List.Content>
+            </List.Item>
+          </List>
       );
     }
   }
 }
+
+DocumentTree.contextType = PouchContext;
 
 export default DocumentTree;

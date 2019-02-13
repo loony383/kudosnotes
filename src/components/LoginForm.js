@@ -5,80 +5,24 @@ import {
   Grid,
   Header,
 } from "semantic-ui-react";
-
-import PouchDB from "pouchdb";
-
 import styles from "../css/LoginForm.module.scss";
 
-import db from "../pouch.js";
-
-let remoteDB;
+import { PouchContext } from "../pouch";
 
 class LoginForm extends React.Component {
   constructor(props) {
     super(props);
-    this.state = {username: "", password: ""}
-    if (remoteDB instanceof PouchDB) {
-      remoteDB.close();
-    }
+    this.state = {username: "", password: "", showForm: false}
+  }
+
+  componentDidMount() {
     if (!this.props.isAuthed) {
       try {
-        this.doLogin();
+        this.context.doLogin();
       } catch {
-        this.setSync(false);
+        this.context.setSync(false);
       }
     }
-  }
-
-  doLogin() {
-    remoteDB = new PouchDB("http://dnd.zeak.co:5984/dnd", {
-      fetch(url, opts) {
-        opts.credentials = "include";
-        return PouchDB.fetch(url, opts);
-      }
-    });
-
-    db.sync(remoteDB, {
-      live: true,
-      retry: true
-    })
-      .on("change", message => {
-        this.props.setAuth(true);
-      })
-      .on("paused", message => {
-        this.props.setAuth(true);
-      })
-      .on("active", message => {
-        this.props.setAuth(true);
-      })
-      .on("error", err => {
-        this.props.setAuth(false);
-      });
-  }
-
-  // Attempt a login in case there is a existing login cookie
-
-  startSync(username, password) {
-    fetch("http://dnd.zeak.co:5984/_session", {
-      method: "post",
-      headers: {
-        Accept: "application/json",
-        Host: "localhost:5984",
-        "Content-Type": "application/x-www-form-urlencoded"
-      },
-      credentials: "include",
-      body: "name=" + username + "&password=" + password
-    })
-      .then(response => {
-        if (!response.ok) {
-          this.props.setAuth({isAuthed: false, shouldSync: true});
-          throw Error(response.statusText);
-        }
-        return response.json();
-      })
-      .then(responseAsJson => {
-        this.doLogin();
-      });
   }
 
   handleInputChange(event) {
@@ -92,68 +36,67 @@ class LoginForm extends React.Component {
   }
 
   doSubmit() {
-    this.props.setSync(true);
-    this.startSync(this.state.username, this.state.password);
+    this.context.setSync(true);
+    this.context.startSync(this.state.username, this.state.password);
   }
 
   render() {
-    if (
-      !this.props.shouldSync ||
-      (this.props.shouldSync && this.props.isAuthed)
-    ) {
+    if (!this.context.requiresLogin()) {
       return this.props.children;
     }
 
     return (
-      <div className={styles.LoginForm}>
-        <Grid
-          textAlign="center"
-          style={{height: "100%"}}
-          verticalAlign="middle"
-        >
-          <Grid.Column style={{maxWidth: 450}}>
-            <Form>
-              <Header>Login</Header>
-              <Form.Input
-                fluid
-                icon="user"
-                iconPosition="left"
-                placeholder="Username"
-                name="username"
-                value={this.state.username}
-                onChange={e => this.handleInputChange(e)}
-              />
-              <Form.Input
-                fluid
-                icon="lock"
-                iconPosition="left"
-                placeholder="Password"
-                name="password"
-                type="password"
-                value={this.state.password}
-                onChange={e => this.handleInputChange(e)}
-              />
-              <Button.Group fluid widths="2">
-                <Button
-                  content="Continue offline"
-                  size="large"
-                  icon="power off"
-                  onClick={() => this.props.setSync(false)}
+        <div className={styles.LoginForm}>
+          <Grid
+            textAlign="center"
+            style={{height: "100%"}}
+            verticalAlign="middle"
+          >
+            <Grid.Column style={{maxWidth: 450}}>
+              <Form>
+                <Header>Login</Header>
+                <Form.Input
+                  fluid
+                  icon="user"
+                  iconPosition="left"
+                  placeholder="Username"
+                  name="username"
+                  value={this.state.username}
+                  onChange={e => this.handleInputChange(e)}
                 />
-                <Button
-                  primary
-                  icon="sync"
-                  size="large"
-                  content="Login"
-                  onClick={() => this.doSubmit()}
+                <Form.Input
+                  fluid
+                  icon="lock"
+                  iconPosition="left"
+                  placeholder="Password"
+                  name="password"
+                  type="password"
+                  value={this.state.password}
+                  onChange={e => this.handleInputChange(e)}
                 />
-              </Button.Group>
-            </Form>
-          </Grid.Column>
-        </Grid>
-      </div>
+                <Button.Group fluid widths="2">
+                  <Button
+                    content="Continue offline"
+                    size="large"
+                    icon="power off"
+                    onClick={() => this.context.setSync(false)}
+                  />
+                  <Button
+                    primary
+                    icon="sync"
+                    size="large"
+                    content="Login"
+                    onClick={() => this.doSubmit()}
+                  />
+                </Button.Group>
+              </Form>
+            </Grid.Column>
+          </Grid>
+        </div>
     );
   }
 }
+
+LoginForm.contextType = PouchContext;
 
 export default LoginForm;

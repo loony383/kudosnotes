@@ -1,7 +1,6 @@
 import React from "react";
 
-import db from '../pouch.js'
-
+import { PouchContext } from '../pouch.js'
 import {
   Grid,
 } from "semantic-ui-react";
@@ -9,11 +8,15 @@ import {
 import NewFolder from "./NewFolder";
 import DeleteFolder from "./DeleteFolder";
 import styles from '../css/DocumentPane.module.scss'
+import DocumentTree from "./DocumentTree";
 
 class DocumentPane extends React.Component {
   constructor(props) {
     super(props);
     this.state = {document: {}, directory: {}, directoryDocuments: [], currentDirectoryDocument: {}};
+  }
+
+  componentDidMount() {
     this.getDocument(this.props.currentDocument)
     if (this.props.currentDirectory) {
       this.getDirectory(this.props.currentDirectory)
@@ -33,7 +36,7 @@ class DocumentPane extends React.Component {
   }
 
   getDirectory(uuid) {
-    db.find({selector: {uuid: uuid, type: 'dir'}}).then((result) => {
+    this.context.db.find({selector: {uuid: uuid, type: 'dir'}}).then((result) => {
       if (result.docs.length > 0) {
         this.setState({currentDirectoryDocument: result.docs[0]});
       }
@@ -44,7 +47,7 @@ class DocumentPane extends React.Component {
 
 
   getDirectoryDocuments(uuid) {
-    db.find({selector: {parent: uuid, type: 'doc'}}).then((result) => {
+    this.context.db.find({selector: {parent: uuid, type: 'doc'}}).then((result) => {
       this.setState({directoryDocuments: result.docs});
     }).catch(e => {
       console.log(e);
@@ -92,5 +95,6 @@ class DocumentPane extends React.Component {
   }
 }
 
+DocumentPane.contextType = PouchContext;
 
 export default DocumentPane;

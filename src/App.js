@@ -5,6 +5,8 @@ import DocumentPane from "./components/DocumentPane.js";
 import "semantic-ui-css/semantic.min.css";
 import "./App.css";
 
+import { PouchContext } from "./pouch.js";
+
 import { Button, Image, Menu, Container, Grid } from "semantic-ui-react";
 
 class App extends React.Component {
@@ -13,26 +15,17 @@ class App extends React.Component {
     let storedCurrentDirectory = localStorage.getItem('currentDirectory');
     let storedCurrentDocument = localStorage.getItem('currentDocument');
     this.state = {
-      shouldSync: false,
-      isAuthed: false,
       currentDirectory: (storedCurrentDirectory ? storedCurrentDirectory : ''),
       currentDocument: (storedCurrentDocument ? storedCurrentDocument : false)
     };
   }
 
-  setAuth = authed => {
-    this.setState({isAuthed: authed});
-  };
-  setSync = shouldSync => {
-    this.setState({shouldSync: shouldSync});
-  };
-
   getLoginLogout() {
-    if (this.state.isAuthed) {
+    if (this.context.isLoggedIn()) {
       return (
         <Button
           onClick={() => {
-            this.setAuth(false);
+            this.context.setAuth(false);
           }}
         >
           Logout
@@ -43,7 +36,7 @@ class App extends React.Component {
         <Button
           primary
           onClick={() => {
-            this.setSync(true);
+            this.context.setSync(true);
           }}
         >
           Login
@@ -64,16 +57,10 @@ class App extends React.Component {
 
   render() {
     return (
-      <React.Fragment>
-        <LoginForm
-          setAuth={this.setAuth}
-          setSync={this.setSync}
-          shouldSync={this.state.shouldSync}
-          isAuthed={this.state.isAuthed}
-        >
+        <LoginForm>
           <Menu borderless>
             <Container>
-              <Menu.Item as="a" header fitted={true} >
+              <Menu.Item as="a" header fitted={true}>
                 <Image src="https://placehold.it/150x35"/>
               </Menu.Item>
               <Menu.Item fitted="horizontally" position="right">{this.getLoginLogout()}</Menu.Item>
@@ -97,9 +84,11 @@ class App extends React.Component {
             </Grid>
           </Container>
         </LoginForm>
-      </React.Fragment>
     );
   }
 }
+
+App.contextType = PouchContext;
+
 
 export default App;
