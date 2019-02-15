@@ -8,6 +8,8 @@ import {
 import NewFolder from "./NewFolder";
 import DeleteFolder from "./DeleteFolder";
 import styles from '../css/DirectoryPane.module.scss'
+import DocumentForm from "./DocumentForm";
+import DocumentList from "./DocumentList";
 
 class DirectoryPane extends React.Component {
   constructor(props) {
@@ -57,11 +59,7 @@ class DirectoryPane extends React.Component {
 
   getCurrentPane() {
     if (this.props.currentDocument === false && this.props.currentDirectory !== false) {
-
-      if (this.state.directoryDocuments.length > 0) {
-        return (<p>Has docs</p>)
-      }
-      return (<p>Has no docs</p>)
+      return (<DocumentList/>)
     }
     if (!this.state.currentDocument || !this.state.currentDocument.hasOwnProperty('uuid')) {
       return (
@@ -69,7 +67,7 @@ class DirectoryPane extends React.Component {
       )
     } else {
       return (
-        <p>got a current doc</p>
+        <DocumentForm currentDocument={this.state.currentDocument} currentDirectory={this.state.currentDirectory}/>
       );
     }
   }

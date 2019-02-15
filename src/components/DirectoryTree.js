@@ -49,7 +49,7 @@ class DirectoryTree extends React.Component {
       this.state.directories[uuid].map((current) => {
         return (
           <List.Item key={current.uuid}>
-            <List.Icon name='folder' color={this.isActiveClass(current.uuid)}/>
+            <List.Icon name='folder outline' color={this.isActiveClass(current.uuid)}/>
             <List.Content>
               <List.Description as='a' onClick={() => this.setDirectory(current.uuid)}>{current.name}</List.Description>
               {this.hasChildren(current.uuid) ?
@@ -80,7 +80,7 @@ class DirectoryTree extends React.Component {
               <List.Header>Folder Tree</List.Header>
             </List.Item>
             <List.Item>
-              <List.Icon name='folder' color={this.isActiveClass('')}/>
+              <List.Icon name='folder outline' color={this.isActiveClass('')}/>
               <List.Content>
                 <List.Description as='a' onClick={() => this.setDirectory('')}>root</List.Description>
                 {this.hasChildren('') ?
