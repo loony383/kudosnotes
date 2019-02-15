@@ -9,7 +9,7 @@ import NewFolder from "./NewFolder";
 import DeleteFolder from "./DeleteFolder";
 import styles from '../css/DocumentPane.module.scss'
 
-class DocumentPane extends React.Component {
+class DirectoryPane extends React.Component {
   constructor(props) {
     super(props);
     this.state = {document: {}, directory: {}, directoryDocuments: [], currentDirectoryDocument: {}};
@@ -96,6 +96,6 @@ class DocumentPane extends React.Component {
   }
 }
 
-DocumentPane.contextType = PouchContext;
+DirectoryPane.contextType = PouchContext;
 
-export default DocumentPane;
+export default DirectoryPane;

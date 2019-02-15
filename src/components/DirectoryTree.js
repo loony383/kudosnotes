@@ -5,12 +5,11 @@ import { PouchContext } from '../pouch.js'
 
 import styles from '../css/DocumentTree.module.scss'
 
-class DocumentTree extends React.Component {
+class DirectoryTree extends React.Component {
 
   constructor(props) {
     super(props);
     this.state = {directories: {}};
-
   }
 
   componentDidMount() {
@@ -96,6 +95,6 @@ class DocumentTree extends React.Component {
   }
 }
 
-DocumentTree.contextType = PouchContext;
+DirectoryTree.contextType = PouchContext;
 
-export default DocumentTree;
+export default DirectoryTree;

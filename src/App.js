@@ -1,7 +1,7 @@
 import React from "react";
 import LoginForm from "./components/LoginForm.js";
-import DocumentTree from "./components/DocumentTree.js";
-import DocumentPane from "./components/DocumentPane.js";
+import DirectoryTree from "./components/DirectoryTree.js";
+import DirectoryPane from "./components/DirectoryPane.js";
 import "semantic-ui-css/semantic.min.css";
 import "./App.css";
 
@@ -70,14 +70,14 @@ class App extends React.Component {
             <Grid>
               <Grid.Row>
                 <Grid.Column width={4}>
-                  <DocumentTree currentDirectory={this.state.currentDirectory}
-                                setCurrentDirectory={this.setCurrentDirectory}/>
+                  <DirectoryTree currentDirectory={this.state.currentDirectory}
+                                 setCurrentDirectory={this.setCurrentDirectory}/>
                 </Grid.Column>
                 <Grid.Column width={12}>
-                  <DocumentPane currentDocument={this.state.currentDocument}
-                                currentDirectory={this.state.currentDirectory}
-                                setCurrentDocument={this.setCurrentDocument}
-                                setCurrentDirectory={this.setCurrentDirectory}
+                  <DirectoryPane currentDocument={this.state.currentDocument}
+                                 currentDirectory={this.state.currentDirectory}
+                                 setCurrentDocument={this.setCurrentDocument}
+                                 setCurrentDirectory={this.setCurrentDirectory}
                   />
                 </Grid.Column>
               </Grid.Row>
