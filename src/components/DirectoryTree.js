@@ -3,7 +3,7 @@ import { List, Loader } from "semantic-ui-react";
 
 import { PouchContext } from '../pouch.js'
 
-import styles from '../css/DocumentTree.module.scss'
+import styles from '../css/DirectoryTree.module.scss'
 
 class DirectoryTree extends React.Component {
 

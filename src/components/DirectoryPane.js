@@ -7,7 +7,7 @@ import {
 
 import NewFolder from "./NewFolder";
 import DeleteFolder from "./DeleteFolder";
-import styles from '../css/DocumentPane.module.scss'
+import styles from '../css/DirectoryPane.module.scss'
 
 class DirectoryPane extends React.Component {
   constructor(props) {
