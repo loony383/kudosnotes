@@ -4,7 +4,7 @@
   "private": true,
   "dependencies": {
     "add-cors-to-couchdb": "^0.0.6",
-    "node-sass": "^4.11.0",
+    "node-sass": "^4.13.1",
     "pouchdb": "^7.0.0",
     "pouchdb-find": "^7.0.0",
     "react": "^16.7.0",
